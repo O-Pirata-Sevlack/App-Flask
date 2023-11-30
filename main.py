@@ -3,10 +3,19 @@ import openai, os, openpyxl
 
 app = Flask(__name__)
 
+arq = "senha.txt"
+org = "org.txt"
+
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-openai.organization = os.getenv('OPENAI_ORG', 'org-lJBQgd8qe8dOKY6zILBsmPEI')
-openai.api_key = os.getenv('OPENAI_API_KEY', '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')
+with open(arq, 'r') as arq:
+    senha = arq.read()
+
+with open(org,'r') as org:
+    org = org.read()
+
+openai.organization = os.getenv('OPENAI_ORG', org)
+openai.api_key = os.getenv('OPENAI_API_KEY', senha)
 
 
 @app.route('/')
