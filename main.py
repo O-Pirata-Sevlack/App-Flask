@@ -22,7 +22,25 @@ openai.api_key = os.getenv('OPENAI_API_KEY', senha)
 def home():
     return render_template("inicio.html")
 
+@app.route('/infor', methods=['GET', 'POST'])
+def infor():
+    resposta = None
+    ramal = None
+    if request.method == 'POST':
+        try:
+            arquivo = openpyxl.load_workbook('perguntas.xlsx')
+            sheet = arquivo.active
+            Pergunta = request.form['PR1'].upper()
 
+            if Pergunta != "PARE":
+                for row in sheet.iter_rows(min_row=1, max_row=sheet.max_row, min_col=1, max_col=2):
+                    if Pergunta in str(row[0].value):
+                        ramal = str(row[0].value)
+                        resposta = str(row[1].value)
+        except KeyError:
+            
+            print("KeyError: 'PR1' not found in request.form")
+    return render_template("infor.html", resposta=resposta, ramal=ramal)
 
 @app.route('/chatbot', methods=['GET', 'POST'])
 def chatbot():
